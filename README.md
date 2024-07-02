@@ -1,1 +1,1 @@
-# shady-mysql-python-lab
+# MYSQL LAB Solutions
