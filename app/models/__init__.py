@@ -48,7 +48,7 @@ class State:
                 return {
                     "message": "State already exists",
                     "status": 409,
-                    "result": None
+                    "result": result
                 }
 
             query = "INSERT INTO states (name, abbreviation,capital,population,year_admitted) VALUES(%s, %s,%s, %s,%s)"
@@ -66,7 +66,14 @@ class State:
             return {
                 "message": "State saved successfully",
                 "status": 201,
-                "result": result
+                "result": {
+                    'id': self.conn.cursor.lastrowid,
+                    'name': name,
+                    'abbreviation': abbreviation,
+                    'capital': capital,
+                    'population': population,
+                    'year_admitted': year_admitted
+                }
             }
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -239,7 +246,7 @@ class State:
             self.conn.cursor.close()
             # Close connection
             self.conn.conn.close()
-        if len(capitals_list)>0:
+        if len(capitals_list) > 0:
             return {
                 "message": "Capitals listed",
                 "status": 200,
@@ -247,10 +254,10 @@ class State:
             }
         else:
             return {
-                    "message": "No capitals found",
-                    "status": 404,
-                    "result": None
-                }
+                "message": "No capitals found",
+                "status": 404,
+                "result": None
+            }
 
     def find_most_populous_state(self):
         """Find the state with the highest population"""
@@ -358,16 +365,15 @@ class State:
             }
         else:
             return {
-                    "message": "No states found",
-                    "status": 404,
-                    "result": None
-                }
+                "message": "No states found",
+                "status": 404,
+                "result": None
+            }
 
     def count_states_by_population_range(self, lower_bound, upper_bound):
         """Count states based on population ranges"""
 
         query = "SELECT COUNT(*) FROM states WHERE population >= %s AND population <= %s"
-
 
         try:
             self.conn.cursor.execute(query, (lower_bound, upper_bound))
@@ -424,9 +430,7 @@ class State:
             }
         else:
             return {
-                    "message": "No states or capitals found",
-                    "status": 404,
-                    "result": None
-                }
-
-
+                "message": "No states or capitals found",
+                "status": 404,
+                "result": None
+            }
